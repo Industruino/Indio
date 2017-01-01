@@ -1,0 +1,31 @@
+#######################################
+# Syntax Coloring Map Indio
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+IndioClass	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+analogRead	KEYWORD2
+analogWrite	KEYWORD2
+analogReadMode	KEYWORD2
+analogWriteMode	KEYWORD2
+digitalMode	KEYWORD2
+digitalWrite	KEYWORD2	
+digitalRead     KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################
+mA	LITERAL1
+V10	LITERAL1
+V5  LITERAL1
+mA_p  LITERAL1
+V10_p  LITERAL1
+V5_p  LITERAL1
+mA_raw   LITERAL1
+V10_raw  LITERAL1
