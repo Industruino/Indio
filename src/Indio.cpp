@@ -167,7 +167,7 @@ float IndioClass::analogRead(int pin)
 	if (mode_ADC[pin]==4)
 	{
 	current=map(((data/mvDivisor)+2048), ADC_current_low_raw[pin], ADC_current_high_raw[pin], ADC_current_low_uA[pin], ADC_current_high_uA[pin]);
-	return ((((current-4000)/20000))*100);
+	return ((((current-4000)/16000))*100);
 	}
 	if (mode_ADC[pin]==5)
 	{
