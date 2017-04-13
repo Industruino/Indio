@@ -167,7 +167,7 @@ float IndioClass::analogRead(int pin)
 	if (mode_ADC[pin]==4)
 	{
 	current=map(((data/mvDivisor)+2048), ADC_current_low_raw[pin], ADC_current_high_raw[pin], ADC_current_low_uA[pin], ADC_current_high_uA[pin]);
-	return ((((current-4000)/20000))*100);
+	return ((((current-4000)/16000))*100);
 	}
 	if (mode_ADC[pin]==5)
 	{
@@ -311,7 +311,8 @@ float IndioClass::analogRead(int pin)
 	void IndioClass::analogReadMode(int pin, int mode)
 	{
         int res=(INDIO_ADC_RESOLUTION-12)/2;
-        
+        int modeSwitchPin;
+
         switch (res) {
             case 0:
                 sample_rate = 5;
@@ -330,8 +331,22 @@ float IndioClass::analogRead(int pin)
                  mvDivisor = 64;
                 break;
         }
-       
- 
+
+        switch (pin) {
+            case 1:
+                modeSwitchPin = 11;
+                break;
+            case 2:
+                modeSwitchPin = 10;
+                break;
+            case 3:
+                modeSwitchPin = 13;
+                break;
+            case 4:
+                modeSwitchPin = 12;
+                break;
+        }
+
         previouspin = 0;
         
         this->setAddress2(0x20);
@@ -345,50 +360,50 @@ float IndioClass::analogRead(int pin)
 	 // setup the mode of a pin from PCA9555 call flushMode() or flush() to send it on PCA9555
       if(mode == 1)
       {
-	    
-        bitWrite(outputBuffer2, pin+9, HIGH);
+
+        bitWrite(outputBuffer2, modeSwitchPin, HIGH);
 		adcConfig[pin]= MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2;
 		mode_ADC[pin]=1;
       }
       else if (mode == 2)
       {
-         bitWrite(outputBuffer2, pin+9, LOW);
+         bitWrite(outputBuffer2, modeSwitchPin, LOW);
          adcConfig[pin] = MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2;
 		 mode_ADC[pin]=2;
       }
 	  else if (mode == 3)
 	  {
-	     bitWrite(outputBuffer2, pin+9, LOW);
+	     bitWrite(outputBuffer2, modeSwitchPin, LOW);
          adcConfig[pin] = MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2 | 1;
 		 mode_ADC[pin]=3;
 	  }
 	  else if (mode == 4)
 	  {
-	     bitWrite(outputBuffer2, pin+9, HIGH);
+	     bitWrite(outputBuffer2, modeSwitchPin, HIGH);
          adcConfig[pin]= MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2;
 		 mode_ADC[pin]=4;
 	  }
 	  else if (mode == 5)
       {
-         bitWrite(outputBuffer2, pin+9, LOW);
+         bitWrite(outputBuffer2, modeSwitchPin, LOW);
          adcConfig[pin] = MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2;
 		 mode_ADC[pin]=5;
       }
 	  else if (mode == 6)
 	  {
-	     bitWrite(outputBuffer2, pin+9, LOW);
+	     bitWrite(outputBuffer2, modeSwitchPin, LOW);
          adcConfig[pin] = MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2 | 1;
 		 mode_ADC[pin]=6;
 	  }
 	  else if (mode == 7)
 	  {
-	     bitWrite(outputBuffer2, pin+9, HIGH);
+	     bitWrite(outputBuffer2, modeSwitchPin, HIGH);
          adcConfig[pin] = MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2;
 		 mode_ADC[pin]=7;
 	  }
       else if (mode == 8)
 	  {
-          bitWrite(outputBuffer2, pin+9, LOW);
+          bitWrite(outputBuffer2, modeSwitchPin, LOW);
           adcConfig[pin] = MCP342X_START | MCP342X_CONTINUOUS | (pin-1) << 5 | res<< 2;
           mode_ADC[pin]=8;
 	  }
