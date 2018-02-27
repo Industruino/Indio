@@ -17,7 +17,7 @@ Library is preloaded with calibration data but characterisctics are board specif
 
 void setup()
 {
-  Serial.begin(9600); 
+  SerialUSB.begin(9600); 
 
   Indio.analogWriteMode(1, V10); // Set Analog-Out CH1 to 10V mode (0-10V).
 //Indio.analogWriteMode(1, V10_p); // Set Analog-Out CH1 to % 10V mode ( 0-100% -> 0-10V).

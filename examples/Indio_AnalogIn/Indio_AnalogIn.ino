@@ -20,8 +20,8 @@ float sensorVal1, sensorVal2, sensorVal3, sensorVal4; //variables to hold your s
 void setup()
 {
   
-  Serial.begin(9600); 
-   while (!Serial)
+  SerialUSB.begin(9600); 
+   while (!SerialUSB)
    {
      // wait for serial port to connect. Needed for Leonardo only
    }
@@ -43,29 +43,29 @@ void loop()
 {
 
   sensorVal1=Indio.analogRead(1); //Read Analog-In CH1 (output depending on selected mode)
-  Serial.print("CH1: "); //Print "CH" for human readability
-  Serial.print(sensorVal1, 3); //Print data
-  Serial.print("  "); //Add some "  " space
+  SerialUSB.print("CH1: "); //Print "CH" for human readability
+  SerialUSB.print(sensorVal1, 3); //Print data
+  SerialUSB.print("  "); //Add some "  " space
   
 
   sensorVal2=Indio.analogRead(2); //Read Analog-In CH1 (output depending on selected mode)
-  Serial.print("CH2: "); //Print "CH" for human readability
-  Serial.print(sensorVal2, 3); //Print data
-  Serial.print("  "); //Add some "  " space
+  SerialUSB.print("CH2: "); //Print "CH" for human readability
+  SerialUSB.print(sensorVal2, 3); //Print data
+  SerialUSB.print("  "); //Add some "  " space
 
 
   sensorVal3=Indio.analogRead(3); //Read Analog-In CH1 (output depending on selected mode)
-  Serial.print("CH3: "); //Print "CH" for human readability
-  Serial.print(sensorVal3, 3); //Print data
-  Serial.print("  "); //Add some "  " space
+  SerialUSB.print("CH3: "); //Print "CH" for human readability
+  SerialUSB.print(sensorVal3, 3); //Print data
+  SerialUSB.print("  "); //Add some "  " space
  
 
   sensorVal4=Indio.analogRead(4); //Read Analog-In CH1 (output depending on selected mode)
-  Serial.print("CH4: "); //Print "CH" for human readability
-  Serial.print(sensorVal4, 3); //Print data
-  Serial.print("  "); //Add some "  " space
+  SerialUSB.print("CH4: "); //Print "CH" for human readability
+  SerialUSB.print(sensorVal4, 3); //Print data
+  SerialUSB.print("  "); //Add some "  " space
  
-  Serial.print("\r\n"); // Print a new line to serial.
+  SerialUSB.print("\r\n"); // Print a new line to SerialUSB.
 
 }
 

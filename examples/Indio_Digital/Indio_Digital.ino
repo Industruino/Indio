@@ -30,20 +30,20 @@ void setup()
 void loop()
 {
 
-  Serial.print(Indio.digitalRead(1),BIN); // Read CH1 one, print state to serial.
-  Serial.print(Indio.digitalRead(2),BIN); // Read CH2 one, print state to serial.
-  Serial.print(Indio.digitalRead(3),BIN); // Read CH3 one, print state to serial.
-  Serial.print("\r\n"); // Print a new line to serial.
+  SerialUSB.print(Indio.digitalRead(1),BIN); // Read CH1 one, print state to SerialUSB.
+  SerialUSB.print(Indio.digitalRead(2),BIN); // Read CH2 one, print state to SerialUSB.
+  SerialUSB.print(Indio.digitalRead(3),BIN); // Read CH3 one, print state to SerialUSB.
+  SerialUSB.print("\r\n"); // Print a new line to SerialUSB.
 
   Indio.digitalWrite(7,HIGH); // Set CH7 to high (24V, or whatever your Vin voltage).
   Indio.digitalWrite(8,HIGH); // Set CH8 to high (24V, or whatever your Vin voltage).
   
   delay(2000);
 
-  Serial.print(Indio.digitalRead(1),BIN); // Read CH1 one, print state to serial.
-  Serial.print(Indio.digitalRead(2),BIN); // Read CH2 one, print state to serial.
-  Serial.print(Indio.digitalRead(3),BIN); // Read CH3 one, print state to serial.
-  Serial.print("\r\n");
+  SerialUSB.print(Indio.digitalRead(1),BIN); // Read CH1 one, print state to SerialUSB.
+  SerialUSB.print(Indio.digitalRead(2),BIN); // Read CH2 one, print state to SerialUSB.
+  SerialUSB.print(Indio.digitalRead(3),BIN); // Read CH3 one, print state to SerialUSB.
+  SerialUSB.print("\r\n");
   
   Indio.digitalWrite(7,LOW); // Set CH7 to low (0V).
   Indio.digitalWrite(8,LOW); // Set CH8 to low (0V)

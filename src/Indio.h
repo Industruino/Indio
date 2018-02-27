@@ -30,6 +30,10 @@
 #define V5_p 6
 #define mA_raw 7
 #define V10_raw 8
+#define INPUT_MASKED 11
+#define INPUT_LATCHED 12
+#define INPUT_LATCHED_MASKED 13
+
 
 
 class IndioClass
@@ -39,9 +43,15 @@ class IndioClass
     int REGISTER_INPUT;
     int REGISTER_OUTPUT;
     int REGISTER_CONFIG;
+    int REGISTER_MASK;
+    int REGISTER_LATCH;
+    int REGISTER_INTERRUPT_SOURCE;
     int outputBuffer;
     int inputBuffer;
     int modeBuffer;
+    int maskBuffer;
+    int latchBuffer;
+    int interruptSourceBuffer;
 	int outputBuffer2;
     int inputBuffer2;
     int modeBuffer2;
@@ -49,6 +59,7 @@ class IndioClass
     int sample_rate;
     int previous_sample;
     double mvDivisor;
+    int startupState = 1;
 
   public:
     
@@ -90,11 +101,19 @@ class IndioClass
 
     int digitalRead(int pin);
     
+    int interruptSource();
+    
     void flushMode();
+    
+    void flushMask();
+    
+    void flushLatch();
 
     void flushOutput();
     
     void flushInput();
+    
+    void flushInterruptSource();
    
     void flush();
 	
@@ -108,10 +127,17 @@ class IndioClass
     
     int gpio_read();
     
+    int interruptSource_read();
+    
     void gpio_write(int data);
     
     void gpio_dir(int dir);
+    
+    void gpio_mask(int dir);
+    
+    void gpio_latch(int dir);
 
+	unsigned int Log2n(unsigned int n);
   
 };
 

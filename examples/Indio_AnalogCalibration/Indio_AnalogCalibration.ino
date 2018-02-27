@@ -84,7 +84,7 @@ void setup() {
 
   screenWelcome(); //load first menu
 
-  Serial.begin(9600);
+  SerialUSB.begin(9600);
   while (!Serial) {};
 
   serialMenu();
@@ -95,10 +95,10 @@ void setup() {
 
 void loop() {
 
-  int option = Serial.parseInt();
+  int option = SerialUSB.parseInt();
   if (option < 1 || option > 4) return;
   else {
-    Serial.println(option);
+    SerialUSB.println(option);
     switch (option) {
       case 1:
         DAC_voltage();
@@ -122,8 +122,8 @@ void loop() {
 
 void ADC_voltage() {
 
-  Serial.println(F("ADC calibration voltage mode: 0-10V"));
-  Serial.println(F("==================================="));
+  SerialUSB.println(F("ADC calibration voltage mode: 0-10V"));
+  SerialUSB.println(F("==================================="));
   screenADC_voltage_low();
 
   Indio.setADCResolution(16);
@@ -131,58 +131,58 @@ void ADC_voltage() {
     Indio.analogReadMode(i, V10_raw);
   }
 
-  Serial.println();
-  Serial.println(F("Connect known LOW voltage to all analog input channels, e.g. 2500mV"));
-  Serial.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
+  SerialUSB.println();
+  SerialUSB.println(F("Connect known LOW voltage to all analog input channels, e.g. 2500mV"));
+  SerialUSB.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
   int voltage = getSerialInt(0, 10000);
-  Serial.println(voltage);
+  SerialUSB.println(voltage);
 
   for (i = 1; i <= inputChannels; i++) {
     ADC_voltage_low_mV[i]  = voltage;
     ADC_voltage_low_raw[i] = Indio.analogRead(i);                                                // read Analog IN at same time
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data ADC_voltage_low_mV: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data ADC_voltage_low_mV: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_voltage_low_mV[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_voltage_low_mV[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_voltage_low_mV[inputChannels]);
+  SerialUSB.println(ADC_voltage_low_mV[inputChannels]);
 
-  Serial.print(F("Calibration data ADC_voltage_low_raw: "));
+  SerialUSB.print(F("Calibration data ADC_voltage_low_raw: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_voltage_low_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_voltage_low_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_voltage_low_raw[inputChannels]);
+  SerialUSB.println(ADC_voltage_low_raw[inputChannels]);
 
   screenADC_voltage_high();
-  Serial.println();
-  Serial.println(F("Connect known HIGH voltage to all analog input channels, e.g. 7500mV"));
-  Serial.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
+  SerialUSB.println();
+  SerialUSB.println(F("Connect known HIGH voltage to all analog input channels, e.g. 7500mV"));
+  SerialUSB.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
   voltage = getSerialInt(0, 10000);
-  Serial.println(voltage);
+  SerialUSB.println(voltage);
 
   for (i = 1; i <= inputChannels; i++) {
     ADC_voltage_high_mV[i]  = voltage;
     ADC_voltage_high_raw[i] = Indio.analogRead(i);                                                // read Analog IN at same time
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data ADC_voltage_high_mV: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data ADC_voltage_high_mV: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_voltage_high_mV[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_voltage_high_mV[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_voltage_high_mV[inputChannels]);
+  SerialUSB.println(ADC_voltage_high_mV[inputChannels]);
 
-  Serial.print(F("Calibration data ADC_voltage_high_raw: "));
+  SerialUSB.print(F("Calibration data ADC_voltage_high_raw: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_voltage_high_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_voltage_high_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_voltage_high_raw[inputChannels]);
+  SerialUSB.println(ADC_voltage_high_raw[inputChannels]);
 
   screenDone();
   serialMenu();
@@ -191,9 +191,9 @@ void ADC_voltage() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ADC_current() {
-  Serial.println(F("ADC calibration current mode: 4-20mA"));
-  Serial.println(F("===================================="));
-  Serial.println();
+  SerialUSB.println(F("ADC calibration current mode: 4-20mA"));
+  SerialUSB.println(F("===================================="));
+  SerialUSB.println();
 
   Indio.setADCResolution(12);
   for (i = 1; i <= inputChannels; i++) {
@@ -204,66 +204,66 @@ void ADC_current() {
 
   for (i = 1; i <= inputChannels; i++) {                                          // read Analog IN one by one
 
-    Serial.print(F("Connect a known LOW current to input channel "));
-    Serial.print(i);
-    Serial.println(F(", e.g. 10000uA"));
-    Serial.print(F("Enter the voltage (in uA) in the Serial Monitor box above. Received (uA): "));
+    SerialUSB.print(F("Connect a known LOW current to input channel "));
+    SerialUSB.print(i);
+    SerialUSB.println(F(", e.g. 10000uA"));
+    SerialUSB.print(F("Enter the voltage (in uA) in the Serial Monitor box above. Received (uA): "));
     ADC_current_low_uA[i] = getSerialInt(0, 20000);
-    Serial.print(ADC_current_low_uA[i]);
+    SerialUSB.print(ADC_current_low_uA[i]);
 
     ADC_current_low_raw[i] = Indio.analogRead(i);
-    Serial.print(F(" Measured (raw): "));
-    Serial.println(ADC_current_low_raw[i]);
-    //    Serial.println();
+    SerialUSB.print(F(" Measured (raw): "));
+    SerialUSB.println(ADC_current_low_raw[i]);
+    //    SerialUSB.println();
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data ADC_current_low_uA: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data ADC_current_low_uA: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_current_low_uA[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_current_low_uA[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_current_low_uA[inputChannels]);
+  SerialUSB.println(ADC_current_low_uA[inputChannels]);
 
-  Serial.print(F("Calibration data ADC_current_low_raw: "));
+  SerialUSB.print(F("Calibration data ADC_current_low_raw: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_current_low_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_current_low_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_current_low_raw[inputChannels]);
-  Serial.println();
+  SerialUSB.println(ADC_current_low_raw[inputChannels]);
+  SerialUSB.println();
 
 
   for (i = 1; i <= inputChannels; i++) {                                          // read Analog IN one by one
 
-    Serial.print(F("Connect a known HIGH current to input channel "));
-    Serial.print(i);
-    Serial.println(F(", e.g. 20000uA"));
-    Serial.print(F("Enter the voltage (in uA) in the Serial Monitor box above. Received (uA): "));
+    SerialUSB.print(F("Connect a known HIGH current to input channel "));
+    SerialUSB.print(i);
+    SerialUSB.println(F(", e.g. 20000uA"));
+    SerialUSB.print(F("Enter the voltage (in uA) in the Serial Monitor box above. Received (uA): "));
     ADC_current_high_uA[i] = getSerialInt(0, 20001);
-    Serial.print(ADC_current_high_uA[i]);
+    SerialUSB.print(ADC_current_high_uA[i]);
 
     ADC_current_high_raw[i] = Indio.analogRead(i);
-    Serial.print(F(" Measured (raw): "));
-    Serial.println(ADC_current_high_raw[i]);
-    //    Serial.println();
+    SerialUSB.print(F(" Measured (raw): "));
+    SerialUSB.println(ADC_current_high_raw[i]);
+    //    SerialUSB.println();
   }
 
 
-  Serial.println();
-  Serial.print(F("Calibration data ADC_current_high_uA: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data ADC_current_high_uA: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_current_high_uA[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_current_high_uA[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_current_high_uA[inputChannels]);
+  SerialUSB.println(ADC_current_high_uA[inputChannels]);
 
-  Serial.print(F("Calibration data ADC_current_high_raw: "));
+  SerialUSB.print(F("Calibration data ADC_current_high_raw: "));
   for (i = 1; i < inputChannels; i++) {
-    Serial.print(ADC_current_high_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(ADC_current_high_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(ADC_current_high_raw[inputChannels]);
+  SerialUSB.println(ADC_current_high_raw[inputChannels]);
 
   ////////////////// WILL HANG HERE  /////////////////////////
   screenDone();      //// NEXT LCD DISPLAY HANGS
@@ -275,9 +275,9 @@ void ADC_current() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void DAC_voltage() {
-  Serial.println(F("DAC calibration voltage mode: 0-10V"));
-  Serial.println(F("==================================="));
-  Serial.println();
+  SerialUSB.println(F("DAC calibration voltage mode: 0-10V"));
+  SerialUSB.println(F("==================================="));
+  SerialUSB.println();
 
   for (i = 1; i <= outputChannels; i++) {
     Indio.analogWriteMode(i, V10_raw);
@@ -287,28 +287,28 @@ void DAC_voltage() {
 
   for (i = 1; i <= outputChannels; i++) {
     screenDAC_voltage();
-    Serial.print(F("Measure the VOLTAGE (in mV) on channel "));
-    Serial.println(i);
-    Serial.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
+    SerialUSB.print(F("Measure the VOLTAGE (in mV) on channel "));
+    SerialUSB.println(i);
+    SerialUSB.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
     DAC_voltage_low_mV[i] = getSerialInt(0, 10000);
-    Serial.println(DAC_voltage_low_mV[i]);
+    SerialUSB.println(DAC_voltage_low_mV[i]);
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data DAC_voltage_low_raw: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data DAC_voltage_low_raw: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_voltage_low_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_voltage_low_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_voltage_low_raw[outputChannels]);
+  SerialUSB.println(DAC_voltage_low_raw[outputChannels]);
 
-  Serial.print(F("Calibration data DAC_voltage_low_mV: "));
+  SerialUSB.print(F("Calibration data DAC_voltage_low_mV: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_voltage_low_mV[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_voltage_low_mV[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_voltage_low_mV[outputChannels]);
-  Serial.println();
+  SerialUSB.println(DAC_voltage_low_mV[outputChannels]);
+  SerialUSB.println();
 
   for (i = 1; i <= outputChannels; i++) {
     DAC_voltage_high_raw[i] = 3600;
@@ -317,28 +317,28 @@ void DAC_voltage() {
 
   for (i = 1; i <= outputChannels; i++) {
     screenDAC_voltage();
-    Serial.print(F("Measure the VOLTAGE (in mV) on channel "));
-    Serial.println(i);
-    Serial.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
+    SerialUSB.print(F("Measure the VOLTAGE (in mV) on channel "));
+    SerialUSB.println(i);
+    SerialUSB.print(F("Enter the voltage (in mV) in the Serial Monitor box above. Received (mV): "));
     DAC_voltage_high_mV[i] = getSerialInt(0, 15000);
-    Serial.println(DAC_voltage_high_mV[i]);
+    SerialUSB.println(DAC_voltage_high_mV[i]);
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data DAC_voltage_high_raw: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data DAC_voltage_high_raw: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_voltage_high_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_voltage_high_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_voltage_high_raw[outputChannels]);
+  SerialUSB.println(DAC_voltage_high_raw[outputChannels]);
 
-  Serial.print(F("Calibration data DAC_voltage_high_mV: "));
+  SerialUSB.print(F("Calibration data DAC_voltage_high_mV: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_voltage_high_mV[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_voltage_high_mV[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_voltage_high_mV[outputChannels]);
-  Serial.println();
+  SerialUSB.println(DAC_voltage_high_mV[outputChannels]);
+  SerialUSB.println();
 
   screenDone();
   serialMenu();
@@ -348,8 +348,8 @@ void DAC_voltage() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void DAC_current() {
-  Serial.println(F("DAC calibration current mode: 4-20mA"));
-  Serial.println(F("===================================="));
+  SerialUSB.println(F("DAC calibration current mode: 4-20mA"));
+  SerialUSB.println(F("===================================="));
 
   for (i = 1; i <= outputChannels; i++) {
     Indio.analogWriteMode(i, mA_raw);
@@ -359,28 +359,28 @@ void DAC_current() {
 
   for (i = 1; i <= outputChannels; i++) {
     screenDAC_current();
-    Serial.print(F("Measure the current (in uA) on channel "));
-    Serial.println(i);
-    Serial.print(F("Enter the current (in uA) in the Serial Monitor box above. Received (uA): "));
+    SerialUSB.print(F("Measure the current (in uA) on channel "));
+    SerialUSB.println(i);
+    SerialUSB.print(F("Enter the current (in uA) in the Serial Monitor box above. Received (uA): "));
     DAC_current_low_uA[i] = getSerialInt(0, 20000);
-    Serial.println(DAC_current_low_uA[i]);
+    SerialUSB.println(DAC_current_low_uA[i]);
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data DAC_current_low_raw: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data DAC_current_low_raw: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_current_low_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_current_low_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_current_low_raw[outputChannels]);
+  SerialUSB.println(DAC_current_low_raw[outputChannels]);
 
-  Serial.print(F("Calibration data DAC_current_low_uA: "));
+  SerialUSB.print(F("Calibration data DAC_current_low_uA: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_current_low_uA[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_current_low_uA[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_current_low_uA[outputChannels]);
-  Serial.println();
+  SerialUSB.println(DAC_current_low_uA[outputChannels]);
+  SerialUSB.println();
 
   for (i = 1; i <= outputChannels; i++) {
     DAC_current_high_raw[i] = 3600;
@@ -389,28 +389,28 @@ void DAC_current() {
 
   for (i = 1; i <= outputChannels; i++) {
     screenDAC_current();
-    Serial.print(F("Measure the CURRENT (in uA) on channel "));
-    Serial.println(i);
-    Serial.print(F("Enter the current (in uA) in the Serial Monitor box above. Received (uA): "));
+    SerialUSB.print(F("Measure the CURRENT (in uA) on channel "));
+    SerialUSB.println(i);
+    SerialUSB.print(F("Enter the current (in uA) in the Serial Monitor box above. Received (uA): "));
     DAC_current_high_uA[i] = getSerialInt(0, 30000);
-    Serial.println(DAC_current_high_uA[i]);
+    SerialUSB.println(DAC_current_high_uA[i]);
   }
 
-  Serial.println();
-  Serial.print(F("Calibration data DAC_current_high_raw: "));
+  SerialUSB.println();
+  SerialUSB.print(F("Calibration data DAC_current_high_raw: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_current_high_raw[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_current_high_raw[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_current_high_raw[outputChannels]);
+  SerialUSB.println(DAC_current_high_raw[outputChannels]);
 
-  Serial.print(F("Calibration data DAC_current_high_uA: "));
+  SerialUSB.print(F("Calibration data DAC_current_high_uA: "));
   for (i = 1; i < outputChannels; i++) {
-    Serial.print(DAC_current_high_uA[i]);
-    Serial.print(F(","));
+    SerialUSB.print(DAC_current_high_uA[i]);
+    SerialUSB.print(F(","));
   }
-  Serial.println(DAC_current_high_uA[outputChannels]);
-  Serial.println();
+  SerialUSB.println(DAC_current_high_uA[outputChannels]);
+  SerialUSB.println();
 
   screenDone();
   serialMenu();
@@ -481,8 +481,8 @@ void screenADC_voltage_high() {
 
 void screenADC_current() {
 
-  //  Serial.println("in screen");    for debugging
-  //  Serial.println(freeRam());
+  //  SerialUSB.println("in screen");    for debugging
+  //  SerialUSB.println(freeRam());
   lcd.clear();
   lcd.setCursor(5, 1);
   lcd.print(F("ANALOG IN 4-20mA"));
@@ -493,7 +493,7 @@ void screenADC_current() {
   //  lcd.print(i);
   //  lcd.setCursor(5, 6);
   //  lcd.print(F("input Serial Monitor"));
-  //  Serial.println(freeRam());
+  //  SerialUSB.println(freeRam());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -532,22 +532,22 @@ void screenDAC_current() {
 
 void serialMenu() {
 
-  Serial.println();
-  Serial.println(F("================================================================================="));
-  Serial.println();
-  Serial.println(F("Welcome to Industruino!"));
-  Serial.println(F("Analog I/O calibration for IND.I/O"));
-  Serial.println();
-  Serial.println(F("Main menu"));
-  Serial.println(F("1. DAC: analog OUT 0-10V"));
-  Serial.println(F("2. DAC: analog OUT 4-20mA"));
-  Serial.println(F("3. ADC: analog IN 0-10V"));
-  Serial.println(F("4. ADC: analog IN 4-20mA"));
+  SerialUSB.println();
+  SerialUSB.println(F("================================================================================="));
+  SerialUSB.println();
+  SerialUSB.println(F("Welcome to Industruino!"));
+  SerialUSB.println(F("Analog I/O calibration for IND.I/O"));
+  SerialUSB.println();
+  SerialUSB.println(F("Main menu"));
+  SerialUSB.println(F("1. DAC: analog OUT 0-10V"));
+  SerialUSB.println(F("2. DAC: analog OUT 4-20mA"));
+  SerialUSB.println(F("3. ADC: analog IN 0-10V"));
+  SerialUSB.println(F("4. ADC: analog IN 4-20mA"));
 
-  Serial.println();
-  Serial.println(F("Please enter your choice 1,2,3,4 in the Serial input box above and hit return"));
-  //  Serial.println(F("Make sure your Serial Monitor is configured for 'NO LINE ENDING'"));
-  Serial.println();
+  SerialUSB.println();
+  SerialUSB.println(F("Please enter your choice 1,2,3,4 in the Serial input box above and hit return"));
+  //  SerialUSB.println(F("Make sure your Serial Monitor is configured for 'NO LINE ENDING'"));
+  SerialUSB.println();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -555,8 +555,8 @@ void serialMenu() {
 int getSerialInt(int min, int max) {
   int number = -1;
   while (number <= min || number >= max) {
-    while (Serial.available() == 0) { }
-    number = Serial.parseInt();
+    while (SerialUSB.available() == 0) { }
+    number = SerialUSB.parseInt();
   }
   return number;
 }

@@ -17,15 +17,20 @@ analogReadMode	KEYWORD2
 analogWriteMode	KEYWORD2
 digitalMode	KEYWORD2
 digitalWrite	KEYWORD2	
-digitalRead     KEYWORD2
+digitalRead	KEYWORD2
+interruptSource		KEYWORD2
 #######################################
 # Constants (LITERAL1)
 #######################################
 mA	LITERAL1
 V10	LITERAL1
-V5  LITERAL1
-mA_p  LITERAL1
-V10_p  LITERAL1
-V5_p  LITERAL1
-mA_raw   LITERAL1
-V10_raw  LITERAL1
+V5	LITERAL1
+mA_p	LITERAL1
+V10_p	LITERAL1
+V5_p	LITERAL1
+mA_raw	LITERAL1
+V10_raw	LITERAL1
+INPUT_MASKED	LITERAL1
+INPUT_LATCHED	LITERAL1
+INPUT_LATCHED_MASKED	LITERAL1
+

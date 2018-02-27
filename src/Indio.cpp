@@ -209,6 +209,7 @@ float IndioClass::analogRead(int pin)
     { 
      _i2caddr = addr;
       Wire.begin();
+      
     }
   
     void IndioClass::setAddress(char subAddress)
@@ -218,6 +219,9 @@ float IndioClass::analogRead(int pin)
       REGISTER_INPUT  = 0x0;
       REGISTER_OUTPUT = 0x2;
       REGISTER_CONFIG = 0x6;
+      REGISTER_MASK = 0x4A;
+      REGISTER_LATCH = 0x44;
+      REGISTER_INTERRUPT_SOURCE = 0x4C;
 
     //  outputBuffer    = 0;
     //  inputBuffer     = 0;
@@ -478,20 +482,76 @@ float IndioClass::analogRead(int pin)
 	
     void IndioClass::digitalMode(int pin, int mode)
     {
-	  
-     
       this->setAddress(0x21);
+	
+	if  (startupState == 1)
+	{
+      Wire.beginTransmission(0x21);
+      Wire.write(0x4A);
+      Wire.write(0x00);  //  low byte
+      Wire.endTransmission();
+      Wire.beginTransmission(0x21);
+      Wire.write(0x4B);
+      Wire.write(0x00);  //  low byte
+      Wire.endTransmission();
+      startupState = 0;
+      }
+      
+    
       // setup the mode of a pin from PCA9555 call flushMode() or flush() to send it on PCA9555
       if(mode == 1)
       {
         bitClear(modeBuffer, pin*2-1);
+        this->flushMode();
+       
+        bitSet(maskBuffer, pin*2-2);
+        this->flushMask();
+    	bitClear(latchBuffer, pin*2-2);
+        this->flushLatch();
       }
-      else
+      if(mode == 0)
       {
-         bitSet(modeBuffer, pin*2-2);
+        bitSet(modeBuffer, pin*2-2);
+        this->flushMode();
+    	
+    	bitClear(maskBuffer, pin*2-2);
+        this->flushMask();
+    	bitClear(latchBuffer, pin*2-2);
+        this->flushLatch();
+      }
+      if(mode == 11)
+      {
+      	bitSet(modeBuffer, pin*2-2);
+        this->flushMode();
+       
+        bitSet(maskBuffer, pin*2-2);
+        this->flushMask();
+      }
+      if(mode == 12)
+      {
+      	bitSet(modeBuffer, pin*2-2);
+        this->flushMode();
+       
+        bitClear(maskBuffer, pin*2-2);
+        this->flushMask();
+       
+        bitSet(latchBuffer, pin*2-2);
+        this->flushLatch();
+        
+      }
+      if(mode == 13)
+      {
+      	bitSet(modeBuffer, pin*2-2);
+        this->flushMode();
+       
+        bitSet(maskBuffer, pin*2-2);
+        this->flushMask();
+        
+    	bitSet(latchBuffer, pin*2-2);
+        this->flushLatch();
       }
         
-	  this->flushMode();
+	  
   
         
     }
@@ -515,11 +575,36 @@ float IndioClass::analogRead(int pin)
       return (bitRead(inputBuffer,pin*2-2));
 	  
     }
+    
+    int IndioClass::interruptSource()
+    {
+    
+      this->setAddress(0x21);
+      // reads a bit from inputBuffer
+      this->flushInterruptSource();     
+      int n = interruptSourceBuffer;
+      n = n << 2;  //offset for zero value - interrupt source register empty
+	  n = ((Log2n(n) + 1)/2);  
+      return n;
+    }
+    
 
     void IndioClass::flushMode()
     {
       // send modeBuffer to PCA9555 so you can config the inputs and outputs
       gpio_dir(modeBuffer);
+    }
+     
+     void IndioClass::flushMask()
+    {
+      // send modeBuffer to PCA9555 so you can config the inputs and outputs
+      gpio_mask(maskBuffer);
+    }
+    
+    void IndioClass::flushLatch()
+    {
+      // send modeBuffer to PCA9555 so you can config the inputs and outputs
+      gpio_latch(latchBuffer);
     }
 
     void IndioClass::flushOutput()
@@ -532,6 +617,12 @@ float IndioClass::analogRead(int pin)
     {
       // receive inputBuffer from PCA9555
       inputBuffer = gpio_read();
+    }
+    
+    void IndioClass::flushInterruptSource()
+    {
+      // receive inputBuffer from PCA9555
+      interruptSourceBuffer = interruptSource_read();
     }
 	
     void IndioClass::flushMode2()
@@ -592,6 +683,30 @@ float IndioClass::analogRead(int pin)
       Wire.endTransmission();
       return data;
     }
+    
+    
+     int IndioClass::interruptSource_read()
+    {
+      int data = 0;
+
+      //  Send input register address
+      Wire.beginTransmission(ADDRESS);
+      Wire.write(REGISTER_INTERRUPT_SOURCE);
+      Wire.endTransmission();
+
+      //  Connect to device and request two bytes
+      Wire.beginTransmission(ADDRESS);
+      Wire.requestFrom(ADDRESS, 2);
+      if (Wire.available()) {
+
+        data = Wire.read();
+      }    
+      if (Wire.available()) {
+        data = word(Wire.read(),data);
+      }
+      Wire.endTransmission();
+      return data;
+    }
 
     void IndioClass::gpio_write(int data)
     {
@@ -618,5 +733,35 @@ float IndioClass::analogRead(int pin)
 
       Wire.endTransmission();
     }
+     void IndioClass::gpio_mask(int mask)
+    {
+      //  Send config register address
+      Wire.beginTransmission(ADDRESS);
+      Wire.write(REGISTER_MASK);
+
+      //  Connect to device and send two bytes
+      Wire.write(0xff & mask);  //  low byte
+      Wire.write(mask >> 8);    //  high byte
+
+      Wire.endTransmission();
+    }
+     void IndioClass::gpio_latch(int latch)
+    {
+      //  Send config register address
+      Wire.beginTransmission(ADDRESS);
+      Wire.write(REGISTER_LATCH);
+
+      //  Connect to device and send two bytes
+      Wire.write(0xff & latch);  //  low byte
+      Wire.write(latch >> 8);    //  high byte
+
+      Wire.endTransmission();
+    }
+    
+    unsigned int IndioClass::Log2n(unsigned int n)
+	{
+    return (n > 1)? 1 + Log2n(n/2): 0;
+	}
+
 
 IndioClass Indio;
