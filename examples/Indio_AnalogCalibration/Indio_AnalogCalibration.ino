@@ -85,7 +85,7 @@ void setup() {
   screenWelcome(); //load first menu
 
   SerialUSB.begin(9600);
-  while (!Serial) {};
+  while (!SerialUSB) {};
 
   serialMenu();
 }
