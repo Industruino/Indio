@@ -42,9 +42,6 @@
 #include <UC1701.h>
 static UC1701 lcd;
 
-// These constants won't change
-const int backlightIntensity = 0;        // LCD backlight intensity 0=full on
-
 const int inputChannels = 4;      // number of input channels
 const int outputChannels = 2;     // number of output channels
 
@@ -74,10 +71,8 @@ byte i = 0;                  // counter
 
 void setup() {
 
-  pinMode(13, OUTPUT); //set backlight pin to output   for 32u4
-  analogWrite(13, backlightIntensity);
-  pinMode(26, OUTPUT); //set backlight pin to output   for 1286
-  analogWrite(26, backlightIntensity);
+  pinMode(26, OUTPUT); //set backlight pin to output   
+  digitalWrite(26, HIGH); // backlight on
 
   lcd.begin();
   lcd.clear();
@@ -85,7 +80,7 @@ void setup() {
   screenWelcome(); //load first menu
 
   SerialUSB.begin(9600);
-  while (!Serial) {};
+  while (!SerialUSB) {};
 
   serialMenu();
 }
