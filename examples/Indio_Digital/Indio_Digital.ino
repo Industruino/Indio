@@ -14,7 +14,8 @@ WARNING!: PLEASE BE VERY CAREFUL WHEN CONNECTING PERIPHERALS TO YOUR IND.I/O AND
 
 void setup()
 {
-
+   SerialUSB.begin(9600);
+          
 // IND.I/O Baseboard has 8 channels of bidirectional 24V I/O (6.5-32V supported). 
 // Here we choose the direction of each I/O channel. 
   
