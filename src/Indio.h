@@ -22,6 +22,9 @@
  * THE SOFTWARE.
  */
  
+#ifndef INDIO_H_
+#define INDIO_H_
+
 #define mA 1
 #define V10 2
 #define V5 3
@@ -142,3 +145,5 @@ class IndioClass
 };
 
 extern IndioClass Indio;
+
+#endif // INDIO_H_
