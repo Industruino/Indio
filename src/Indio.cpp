@@ -286,11 +286,13 @@ float IndioClass::analogRead(int pin)
         {
             begin(0x61);
         }
-        
-     //uncomment the following two lines for i2c fast mode. Currently not supported in this way on D21G.
-     // uint8_t twbrback = TWBR; 
-     // TWBR = 12; // 400 khz
-     
+
+#ifndef ARDUINO_SAMD_INDUSTRUINO_D21G
+     // i2c fast mode. Currently not supported in this way on D21G.
+     uint8_t twbrback = TWBR;
+     TWBR = 12; // 400 khz
+#endif
+
       Wire.beginTransmission(_i2caddr);
     if (writeEEPROM)
      {
@@ -303,7 +305,9 @@ float IndioClass::analogRead(int pin)
       Wire.write(output / 16);                   // Upper data bits          (D11.D10.D9.D8.D7.D6.D5.D4)
       Wire.write((output % 16) << 4);            // Lower data bits          (D3.D2.D1.D0.x.x.x.x)
       Wire.endTransmission();
-     // TWBR = twbrback;
+#ifndef ARDUINO_SAMD_INDUSTRUINO_D21G
+      TWBR = twbrback;
+#endif
     }
 
     void IndioClass::setADCResolution(int res)
