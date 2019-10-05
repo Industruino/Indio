@@ -63,7 +63,8 @@ class IndioClass
     int previous_sample;
     double mvDivisor;
     int startupState = 1;
-
+    unsigned long timer;
+    int oneShotPin = -1;
   public:
     
     
@@ -79,7 +80,11 @@ class IndioClass
     
  
 // read mcp342x data
-    float analogRead(int pin);
+    float analogRead(int pin=-1);
+    
+    void startAnalogConversion(int pin);
+    bool isAnalogConversionReady();
+
 //------------------------------------------------------------------------------
 // write mcp342x configuration byte
     int mcp342xWrite(int config);

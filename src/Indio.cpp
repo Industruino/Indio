@@ -112,19 +112,36 @@ const int DAC_current_high_uA[3] = {0,19530,19530}; //corresponding uA for high 
 #define MCP4726_CMD_WRITEDAC            (0x40)  // Writes data to the DAC
 #define MCP4726_CMD_WRITEDACEEPROM      (0x60)  // Writes data to the DAC and the EEPROM 
 
+//Start analog conversion
+void IndioClass::startAnalogConversion(int pin)
+{
+    int reg = adcConfig[pin];// | 0x80; //Set RDY flag. In One-Shot Conversion mode, writing this bit to “1” initiates a new conversion
+    reg = reg & ~0x10; //Set One-Shot Conversion Mode bit to 0
+    this->mcp342xWrite(reg);
+    timer = millis();
+    oneShotPin = pin;
+}
 
-    
+//Returns true when analog conversion is ready
+bool IndioClass::isAnalogConversionReady()
+{
+    return (millis() - timer) >= sample_rate;
+}
+
 // read mcp342x data
 float IndioClass::analogRead(int pin)
 {
   float current, voltage;
   long data;
   
-    if (pin != previouspin)
+    if (pin != previouspin && pin != -1)
     {
         this->mcp342xWrite(adcConfig[pin]);
         delay(sample_rate);
         previouspin = pin;
+    }
+    if(pin==-1) {
+        pin = oneShotPin;
     }
   // pointer used to form int32 data
   uint8_t *p = (uint8_t *)&data;
